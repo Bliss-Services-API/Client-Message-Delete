@@ -7,37 +7,16 @@ module.exports = (postgresClient) => {
     const Model = models(postgresClient);
     const clientSyncMessageModel = Model.clientSyncMessageModel;
 
-    const deleteSyncRecord = async (clientId, responseId = undefined, requestId = undefined, podcastTitle = undefined, podcastEpisodeTitle = undefined) => {
+    const deleteSyncRecord = async (clientId, messageId) => {
         return new Promise(async (resolve, reject) => {
             try {
-                if(responseId !== undefined) {
-                    await clientSyncMessageModel.destroy({
-                        where: {
-                            client_id: clientId,
-                            bliss_response_id: responseId
-                        }
-                    });
-                };
-
-                if(requestId !== undefined) {
-                    await clientSyncMessageModel.destroy({
-                        where: {
-                            client_id: clientId,
-                            bliss_request_id: requestId
-                        }
-                    });
-                };
-
-                if(podcast_title !== undefined && podcast_episode_title !== undefined) {
-                    await clientSyncMessageModel.destroy({
-                        where: {
-                            client_id: clientId,
-                            podcast_title: podcastTitle,
-                            podcast_episode_title: podcastEpisodeTitle
-                        }
-                    });
-                };
-
+                await clientSyncMessageModel.destroy({
+                    where: {
+                        client_id: clientId,
+                        message_id: messageId
+                    }
+                });
+                
                 return resolve(true);
             } catch(err) {
                 return reject(err);

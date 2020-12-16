@@ -17,18 +17,17 @@ module.exports.app = async (event, context) => {
         const clientSyncController = Controller.syncUpdateController;
 
         const clientEmail = event.queryStringParameters.client_email;
-        const responseId = event.queryStringParameters.response_id;
-        const requestId = event.queryStringParameters.request_id;
+        const messageId = event.queryStringParameters.message_id;
 
         const clientEmailSalted = clientEmail + "" + MagicWord;
         const clientId = crypto.createHash('sha256').update(clientEmailSalted).digest('base64');
 
-        await clientSyncController.deleteSyncRecord(clientId, responseId, requestId);
+        await clientSyncController.deleteSyncRecord(clientId, messageId);
 
         const response = {
             MESSAGE: 'DONE',
-            RESPONSE: 'Client Message Sync Deleted!',
-            CODE: 'CLIENT_SYNC_DELETED',
+            RESPONSE: 'Client Message Deleted!',
+            CODE: 'CLIENT_MESSAGE_DELETED',
         };
 
         return {
@@ -40,8 +39,8 @@ module.exports.app = async (event, context) => {
 
         const response = {
             ERR: err.message,
-            RESPONSE: 'Client Message Sync Delete Failed!',
-            CODE: 'CLIENT_SYNC_DELETE_FAILED',
+            RESPONSE: 'Client Message Delete Failed!',
+            CODE: 'CLIENT_MESSAGE_DELETE_FAILED',
         };
 
         return {
